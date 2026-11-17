@@ -1,0 +1,42 @@
+/* Design tokens taken from the inspiration design (reference/inspiration-Main.dc.html). */
+:root {
+  --page: #dadada;
+  --shell: #ececec;
+  --sidebar: #f7f7f7;
+  --track: #dcdcdc;
+  --surface: #ffffff;
+  --zone-on: #e2e2e4;
+  --fill: #c6c6c8;
+  --border: #d6d6d6;
+
+  --ink: #1c1c1e;
+  --ink-2: #3a3a3c;
+  --ink-3: #5e5e62;
+  --ink-muted-border: #8e8e93;
+
+  --accent: #3e6ae1;
+  --accent-hover: #2f55c0;
+
+  --pass: #1f7a45;
+  --advisory: #9a5200;
+  --damage: #b3261e;
+
+  --radius-shell: 14px;
+  --radius-control: 8px;
+  --radius-inner: 6px;
+
+  --shadow-shell: 0 2px 6px rgb(0 0 0 / 8%), 0 18px 48px rgb(0 0 0 / 12%);
+  --shadow-chip: 0 1px 2px rgb(0 0 0 / 12%);
+  --shadow-tag: 0 1px 3px rgb(0 0 0 / 14%);
+
+  --font: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --text: 15px;
+  --leading: 22px;
+  --text-small: 13px;
+  --tracking-caps: 0.04em;
+
+  --touch: 44px;
+  --focus: 2px solid var(--accent);
+
+  color-scheme: light;
+}

@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inspection controls · 3D parts selector</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#3E6AE1}a:hover{color:#2F55C0}
+button{font-family:inherit}
+button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid #3E6AE1;outline-offset:2px}
+</style>
+</helmet>
+<div style="box-sizing: border-box; width: 100%; min-height: 100%; background: #DADADA; padding: clamp(0px, 2.4%, 32px); font-family: 'Inter', system-ui, sans-serif; color: #1C1C1E; font-size: 15px; line-height: 22px">
+<div style="box-sizing: border-box; max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap; background: #ECECEC; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08), 0 18px 48px rgba(0,0,0,0.12)">
+
+<nav aria-label="Inspection areas" style="box-sizing: border-box; flex: 1 1 220px; max-width: 100%; background: #F7F7F7; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 10px 16px">
+<span style="font-size: 15px; font-weight: 600">[WORKSHOP NAME]</span>
+<span style="font-size: 13px; color: #5E5E62">[VEHICLE REG]</span>
+</div>
+<sc-for list="{{ zones }}" as="z" hint-placeholder-count="7">
+<button type="button" onClick="{{ z.pick }}" aria-pressed="{{ z.on }}" style="min-height: 44px; padding: 0 10px; display: flex; align-items: center; gap: 12px; border: 0; border-radius: 8px; background: {{ z.bg }}; color: #1C1C1E; font-size: 15px; font-weight: {{ z.weight }}; text-align: left; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5E62" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ z.icon }}"></path></svg>
+<span style="flex: 1 1 auto">{{ z.name }}</span>
+<span style="font-size: 13px; color: #5E5E62; font-variant-numeric: tabular-nums">{{ z.count }}</span>
+</button>
+</sc-for>
+<div style="flex: 1 1 24px"></div>
+<a href="#" style="align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 10px; padding: 0 14px; margin: 8px 6px 0; border: 1px solid #D6D6D6; border-radius: 8px; background: #FFFFFF; color: #1C1C1E; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2zM22 5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7z"></path></svg>
+Guide</a>
+</nav>
+
+<main style="box-sizing: border-box; flex: 999 1 640px; min-width: 0; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M6 17v-6l2-4h8l2 4v6M8 14h.01M16 14h.01"></path></svg>
+Vehicle type</p>
+<div role="group" aria-label="Vehicle type" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 8px; background: #DCDCDC">
+<sc-for list="{{ vehicles }}" as="vh" hint-placeholder-count="5">
+<button type="button" onClick="{{ vh.pick }}" aria-pressed="{{ vh.on }}" style="min-height: 40px; min-width: 76px; padding: 0 14px; border: 0; border-radius: 6px; background: {{ vh.bg }}; box-shadow: {{ vh.shadow }}; color: {{ vh.fg }}; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer">{{ vh.label }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"></path></svg>
+Camera</p>
+<div role="group" aria-label="Camera view" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 8px; background: #DCDCDC">
+<sc-for list="{{ views }}" as="v" hint-placeholder-count="6">
+<button type="button" onClick="{{ v.go }}" style="min-height: 40px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: #3A3A3C; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer">{{ v.label }}</button>
+</sc-for>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<section aria-label="3D vehicle" style="flex: 999 1 460px; min-width: 0; position: relative">
+<canvas data-car-view="1" ref="{{ setCanvas }}" role="img" aria-label="Rotatable 3D vehicle. Drag to rotate and tap a part to select it. Every part is also in the list beside it." onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" onPointerCancel="{{ onCancel }}" onPointerLeave="{{ onLeave }}" style="display: block; width: 100%; aspect-ratio: 5 / 4; max-height: 560px; touch-action: pan-y; cursor: grab"></canvas>
+<p aria-live="polite" style="position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); margin: 0; padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,0.85); font-size: 13px; line-height: 18px; color: #3A3A3C; white-space: nowrap; pointer-events: none">{{ hint }}</p>
+<sc-if value="{{ tagLeft }}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="position: absolute; left: 0; top: {{ tagTop }}; width: {{ tagW }}; display: flex; align-items: center; pointer-events: none">
+<span style="flex: none; display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; border-radius: 6px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.14)"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; line-height: 16px">{{ selName }}</span><span style="font-size: 13px; line-height: 16px; color: {{ selStatusColor }}">{{ selStatus }}</span></span>
+<span style="flex: 1 1 auto; min-width: 8px; height: 1px; background: #3A3A3C"></span>
+<span style="flex: none; width: 9px; height: 9px; border-radius: 50%; background: #3E6AE1; border: 2px solid #FFFFFF"></span>
+</div>
+</sc-if>
+<sc-if value="{{ tagRight }}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="position: absolute; right: 0; top: {{ tagTop }}; width: {{ tagW }}; display: flex; align-items: center; pointer-events: none">
+<span style="flex: none; width: 9px; height: 9px; border-radius: 50%; background: #3E6AE1; border: 2px solid #FFFFFF"></span>
+<span style="flex: 1 1 auto; min-width: 8px; height: 1px; background: #3A3A3C"></span>
+<span style="flex: none; display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; border-radius: 6px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.14)"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; line-height: 16px">{{ selName }}</span><span style="font-size: 13px; line-height: 16px; color: {{ selStatusColor }}">{{ selStatus }}</span></span>
+</div>
+</sc-if>
+</section>
+
+<aside aria-label="Parts" style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; font-size: 13px; font-weight: 600">{{ zoneName }}</p>
+<div style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; padding: 3px; border-radius: 8px; background: #DCDCDC">
+<sc-for list="{{ items }}" as="item" hint-placeholder-count="6">
+<button type="button" onClick="{{ item.pick }}" aria-pressed="{{ item.selected }}" style="min-height: 44px; padding: 0 12px; display: flex; align-items: center; gap: 10px; border: 0; border-radius: 6px; background: {{ item.bg }}; box-shadow: {{ item.shadow }}; color: #1C1C1E; font-size: 14px; text-align: left; cursor: pointer">
+<span aria-hidden="true" style="flex: none; width: 8px; height: 8px; border-radius: 50%; background: {{ item.dot }}; border: 1.5px solid {{ item.dotBorder }}; box-sizing: border-box"></span>
+<span style="flex: 1 1 auto; min-width: 0">{{ item.name }}</span>
+<span style="flex: none; font-size: 13px; font-weight: 500; color: {{ item.statusColor }}">{{ item.statusLabel }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{ noSel }}" hint-placeholder-val="{{ true }}">
+<p style="margin: 0; padding: 12px 0; font-size: 14px; color: #5E5E62">Tap a part on the car or in the list to record its condition.</p>
+</sc-if>
+<sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; font-size: 13px; font-weight: 600">Condition · {{ selName }}</p>
+<div role="group" aria-label="Condition" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; padding: 3px; border-radius: 8px; background: #DCDCDC">
+<sc-for list="{{ conditions }}" as="c" hint-placeholder-count="3">
+<button type="button" onClick="{{ c.set }}" aria-pressed="{{ c.on }}" style="min-height: 40px; padding: 0 6px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 6px; background: {{ c.bg }}; box-shadow: {{ c.shadow }}; color: {{ c.fg }}; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer">
+<span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: {{ c.dot }}"></span>{{ c.label }}</button>
+</sc-for>
+</div>
+</div>
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; font-weight: 600">Notes
+<textarea rows="3" value="{{ note }}" onChange="{{ setNote }}" placeholder="Scratch, dent or chip, and where" style="box-sizing: border-box; width: 100%; resize: vertical; padding: 10px 12px; border: 0; border-radius: 8px; background: #FFFFFF; color: #1C1C1E; font-family: inherit; font-size: 14px; line-height: 20px; font-weight: 400"></textarea>
+</label>
+<button type="button" onClick="{{ clearSel }}" style="align-self: flex-start; min-height: 40px; padding: 0 12px; border: 0; border-radius: 6px; background: #DCDCDC; color: #1C1C1E; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer">Clear</button>
+</div>
+</sc-if>
+
+</aside>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; display: flex; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 600"><span>Inspection progress</span><span style="font-weight: 400; color: #5E5E62">{{ summary }}</span></p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<div style="flex: 999 1 240px; min-width: 0; height: 44px; display: flex; align-items: center; gap: 8px; padding: 3px; box-sizing: border-box; border-radius: 8px; background: #DCDCDC">
+<div aria-hidden="true" style="flex: 1 1 auto; height: 100%; position: relative">
+<div style="position: absolute; left: 0; top: 0; bottom: 0; width: {{ progressPct }}; min-width: 0; border-radius: 6px; background: #C6C6C8"></div>
+</div>
+<span style="flex: none; min-width: 64px; height: 100%; display: inline-flex; align-items: center; justify-content: center; padding: 0 10px; box-sizing: border-box; border-radius: 6px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.12); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums">{{ doneCount }}/{{ total }}</span>
+</div>
+<button type="button" onClick="{{ passRest }}" style="flex: 1 1 auto; min-height: 44px; padding: 0 16px; border: 0; border-radius: 8px; background: #DCDCDC; color: #1C1C1E; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer">Pass the rest</button>
+<button type="button" style="flex: 1 1 auto; min-height: 44px; padding: 0 20px; border: 0; border-radius: 8px; background: #3E6AE1; color: #FFFFFF; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer">Save</button>
+</div>
+</div>
+
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paint":{"editor":"color","default":"#6B6E74","options":["#6B6E74","#E6E7E9","#1F2124"]},"$preview":{"width":1360,"height":1000}}'>
+class Component extends DCLogic {
+  state = { vehicle: 'suv', zone: 'all', selected: null, hover: null, status: {}, notes: {}, noGL: false, anchor: null };
+  _yaw = -1.7;
+  _pitch = 0.5;
+  _drag = null;
+  _colDirty = true;
+
+  vehicles() {
+    return {
+      suv: { label: 'SUV', lx: 1, y0: 0.36, bmax: 1.15, wr: 0.36, wxf: 1.38, wxr: -1.38, XD1: 0.95, XR: 0.25, XD2: -0.15, XD3: -1.05, XRR: -1.7, XT: -9, qGlass: true,
+        HK: [[2.25, 0.98], [2.2, 1.03], [2.1, 1.06], [1.95, 1.08], [0.95, 1.17], [0.25, 1.62], [-0.3, 1.66], [-1.7, 1.58], [-2.15, 1.22], [-2.25, 1.1]] },
+      saloon: { label: 'Saloon', lx: 1.02, y0: 0.3, bmax: 1.0, wr: 0.33, wxf: 1.42, wxr: -1.42, XD1: 0.85, XR: 0.15, XD2: -0.2, XD3: -1.05, XRR: -1.0, XT: -1.6, qGlass: false, skip: ['quarter-window'], names: { tailgate: 'Boot lid' },
+        HK: [[2.25, 0.86], [2.2, 0.9], [2.1, 0.93], [1.95, 0.95], [0.85, 1.03], [0.15, 1.42], [-0.4, 1.45], [-1.0, 1.4], [-1.6, 1.06], [-2.15, 1.03], [-2.25, 0.96]] },
+      hatch: { label: 'Hatch', lx: 0.88, y0: 0.3, bmax: 1.05, wr: 0.33, wxf: 1.42, wxr: -1.42, XD1: 1.0, XR: 0.35, XD2: -0.15, XD3: -1.05, XRR: -1.6, XT: -9, qGlass: true,
+        HK: [[2.25, 0.9], [2.2, 0.95], [2.1, 0.98], [1.95, 1.0], [1.0, 1.08], [0.35, 1.5], [-0.3, 1.53], [-1.6, 1.47], [-2.1, 1.1], [-2.25, 0.98]] },
+      pickup: { label: 'Pickup', lx: 1.08, y0: 0.45, bmax: 1.18, wr: 0.42, wxf: 1.45, wxr: -1.45, XD1: 1.0, XR: 0.4, XD2: 0.15, XD3: -0.62, XRR: -0.5, XT: -0.62, qGlass: false, bed: true, skip: ['quarter-window'],
+        names: { quarter: 'Load bed {s} side', 'rear-windscreen': 'Rear cab window', roof: 'Cab roof' },
+        HK: [[2.25, 1.05], [2.2, 1.1], [2.1, 1.13], [1.95, 1.15], [1.0, 1.22], [0.4, 1.7], [-0.5, 1.72], [-0.62, 1.2], [-2.25, 1.2]] },
+      van: { label: 'Van', lx: 1.05, y0: 0.4, bmax: 1.25, wr: 0.38, wxf: 1.42, wxr: -1.42, XD1: 1.45, XR: 0.9, XD2: 0.2, XD3: -1.0, XRR: -2.1, XT: -9, qGlass: true, capGlass: true,
+        names: { tailgate: 'Rear doors', 'rear-windscreen': 'Rear door glass', 'rear-door': 'Sliding {s} door' },
+        HK: [[2.25, 1.0], [2.2, 1.08], [2.1, 1.12], [1.95, 1.15], [1.45, 1.25], [0.9, 1.95], [0, 2.0], [-2.1, 1.98], [-2.25, 1.9]] }
+    };
+  }
+
+  zoneDefs() {
+    return [
+      { id: 'all', name: 'All parts', icon: 'M4 6h16M4 12h16M4 18h16' },
+      { id: 'Front', name: 'Front', icon: 'M5 17h14M6 17v-6l2-4h8l2 4v6M8 14h.01M16 14h.01' },
+      { id: 'Top', name: 'Top', icon: 'M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM6 9h12M6 16h12' },
+      { id: 'Right side', name: 'Right side', icon: 'M4 15v-3l3-4h8l4 4h1v3H4zM8 18h.01M16 18h.01' },
+      { id: 'Left side', name: 'Left side', icon: 'M20 15v-3l-3-4H9l-4 4H4v3h16zM8 18h.01M16 18h.01' },
+      { id: 'Rear', name: 'Rear', icon: 'M5 17h14M6 17v-6l2-4h8l2 4v6M9 13h6' },
+      { id: 'Wheels', name: 'Wheels', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z' }
+    ];
+  }
+
+  getModel() {
+    const type = this.state.vehicle;
+    if (this._model && this._model.type === type) return this._model;
+    const cfg = this.vehicles()[type], nm = cfg.names || {}, skip = cfg.skip || [];
+    const HP = Math.PI / 2;
+    const V = { front: [-HP + 0.5, 0.32], rear: [HP - 0.45, 0.34], right: [-0.35, 0.3], left: [Math.PI + 0.35, 0.3], top: [-0.5, 1.05] };
+    const parts = [];
+    const P = (id, name, zone, view) => {
+      const sd = /-(right|left)$/.exec(id), base = id.replace(/-(right|left)$/, '');
+      if (skip.indexOf(base) >= 0) return;
+      if (nm[base]) name = nm[base].replace('{s}', sd ? sd[1] : '');
+      parts.push({ id: id, name: name, zone: zone, view: view });
+    };
+    P('front-bumper', 'Front bumper', 'Front', V.front);
+    P('grille', 'Grille and headlights', 'Front', V.front);
+    P('bonnet', 'Bonnet', 'Front', V.front);
+    P('windscreen', 'Windscreen', 'Top', V.top);
+    P('roof', 'Roof', 'Top', V.top);
+    P('rear-windscreen', 'Rear windscreen', 'Top', [HP - 0.5, 0.8]);
+    [['right', 'Right side', V.right], ['left', 'Left side', V.left]].forEach((s) => {
+      P('wing-' + s[0], 'Front ' + s[0] + ' wing', s[1], s[2]);
+      P('front-door-' + s[0], 'Front ' + s[0] + ' door', s[1], s[2]);
+      P('front-window-' + s[0], 'Front ' + s[0] + ' window', s[1], s[2]);
+      P('rear-door-' + s[0], 'Rear ' + s[0] + ' door', s[1], s[2]);
+      P('rear-window-' + s[0], 'Rear ' + s[0] + ' window', s[1], s[2]);
+      P('quarter-' + s[0], 'Rear ' + s[0] + ' quarter panel', s[1], s[2]);
+      P('quarter-window-' + s[0], 'Rear ' + s[0] + ' quarter window', s[1], s[2]);
+    });
+    if (cfg.bed) P('bed', 'Load bed', 'Rear', V.rear);
+    P('tailgate', 'Tailgate', 'Rear', V.rear);
+    P('rear-bumper', 'Rear bumper', 'Rear', V.rear);
+    P('wheel-fr', 'Front right wheel', 'Wheels', V.right);
+    P('wheel-rr', 'Rear right wheel', 'Wheels', V.right);
+    P('wheel-fl', 'Front left wheel', 'Wheels', V.left);
+    P('wheel-rl', 'Rear left wheel', 'Wheels', V.left);
+    const byId = {}, index = {};
+    parts.forEach((p, i) => { byId[p.id] = p; index[p.id] = i; });
+    this._model = { type: type, cfg: cfg, parts: parts, byId: byId, index: index };
+    return this._model;
+  }
+
+  buildGeometry() {
+    const m = this.getModel();
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const pl = (pts, x) => {
+      for (let i = 0; i < pts.length - 1; i++) {
+        const a = pts[i], b = pts[i + 1];
+        if (x <= a[0] && x >= b[0]) return lerp(a[1], b[1], (a[0] - x) / ((a[0] - b[0]) || 1));
+      }
+      return x > pts[0][0] ? pts[0][1] : pts[pts.length - 1][1];
+    };
+    const cfg = m.cfg;
+    const XB = 1.95, XRB = -1.95, XD1 = cfg.XD1, XR = cfg.XR, XD2 = cfg.XD2, XD3 = cfg.XD3, XRR = cfg.XRR, XT = cfg.XT;
+    const HK = cfg.HK, y0 = cfg.y0;
+    const WK = [[2.25, 0.8], [2.1, 0.87], [1.95, 0.9], [-1.95, 0.9], [-2.15, 0.87], [-2.25, 0.82]];
+    const YK = [[2.25, y0 + 0.1], [2.1, y0 + 0.02], [1.95, y0], [-1.95, y0], [-2.1, y0 + 0.02], [-2.25, y0 + 0.1]];
+    let keys = [2.25, 2.2, 2.1, XB, XD1, XR, XD2 + 0.05, XD2, XD2 - 0.05, XD3 + 0.05, XD3, XD3 - 0.05, XRR, XRB, -2.05, -2.15, -2.25].concat(HK.map((q) => q[0]));
+    if (XT > -5) keys.push(XT);
+    keys.sort((p, q) => q - p);
+    const XK = [];
+    keys.forEach((x) => { if (!XK.length || XK[XK.length - 1] - x > 0.03) XK.push(x); });
+    const XS = [];
+    for (let i = 0; i < XK.length; i++) {
+      XS.push(XK[i]);
+      if (i < XK.length - 1) { const gap = XK[i] - XK[i + 1], n = Math.ceil(gap / 0.24); for (let t = 1; t < n; t++) XS.push(XK[i] - (gap * t) / n); }
+    }
+    const half = (x) => {
+      const H = pl(HK, x), Wb = pl(WK, x), Y0 = pl(YK, x);
+      const B = Math.min(cfg.bmax, H - 0.02);
+      const c = Math.max(0, Math.min(1, (H - B - 0.02) / 0.45));
+      const Wt = lerp(Wb - 0.05, (0.72 * Wb) / 0.9, c);
+      const yc = H - 0.01 - 0.09 * c;
+      const pts = [];
+      [0, 0.3, 0.55, 0.75, 0.9].forEach((f) => { pts.push([H - (0.05 * c + 0.008) * f * f, f * Wt]); });
+      pts.push([yc, Wt]);
+      for (let t = 1; t <= 3; t++) pts.push([lerp(yc, B, t / 3), lerp(Wt, Wb - 0.04, t / 3)]);
+      pts.push([B - 0.05, Wb]);
+      pts.push([Math.min(0.86, B - 0.08), Wb + 0.01]);
+      pts.push([0.62, Wb + 0.01]);
+      pts.push([Math.min(Y0 + 0.12, 0.58), Wb - 0.01]);
+      pts.push([Y0, Wb - 0.14]);
+      pts.push([Y0, Wb * 0.45]);
+      pts.push([Y0, 0]);
+      return pts;
+    };
+
+    const KIND = { body: 0, glass: 1, under: 2, tyre: 3, hub: 4, hub2: 5 };
+    const FLAG = [1, 2, 1, 0, 0, 0];
+    const geo = [], vPart = [], vKind = [], edges = [];
+    const vert = (p, n, part, kind) => { geo.push(p[0], p[1], p[2], n[0], n[1], n[2], FLAG[kind]); vPart.push(part == null ? -1 : m.index[part]); vKind.push(kind); };
+    const tri = (a, b, c, na, nb, nc, part, kind) => { vert(a, na, part, kind); vert(b, nb, part, kind); vert(c, nc, part, kind); };
+    const quad = (a, b, c, d, na, nb, nc, nd, part, kind) => { tri(a, b, c, na, nb, nc, part, kind); tri(a, c, d, na, nc, nd, part, kind); };
+    const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    const norm = (a) => { const l = Math.hypot(a[0], a[1], a[2]); return l > 1e-9 ? [a[0] / l, a[1] / l, a[2] / l] : [0, 1, 0]; };
+
+    const NS = XS.length, NK = 30;
+    const G = XS.map((x) => {
+      const hf = half(x), row = [];
+      for (let k = 0; k < NK; k++) { const j = k <= 15 ? k : NK - k, s = k <= 15 ? 1 : -1; row.push([x * cfg.lx, hf[j][0], s * hf[j][1]]); }
+      return row;
+    });
+    const N = G.map((r) => r.map(() => [0, 0, 0]));
+    for (let i = 0; i < NS - 1; i++) {
+      for (let k = 0; k < NK; k++) {
+        const k1 = (k + 1) % NK;
+        const a = G[i][k], b = G[i + 1][k], c = G[i + 1][k1], d = G[i][k1];
+        let fn = cross(sub(c, a), sub(d, b));
+        const qy = (a[1] + b[1] + c[1] + d[1]) / 4 - 0.9, qz = (a[2] + b[2] + c[2] + d[2]) / 4;
+        if (fn[1] * qy + fn[2] * qz < 0) fn = [-fn[0], -fn[1], -fn[2]];
+        [N[i][k], N[i + 1][k], N[i + 1][k1], N[i][k1]].forEach((n) => { n[0] += fn[0]; n[1] += fn[1]; n[2] += fn[2]; });
+      }
+    }
+    for (let i = 0; i < NS; i++) for (let k = 0; k < NK; k++) N[i][k] = norm(N[i][k]);
+
+    const classify = (i, k) => {
+      const hi = k < 15 ? k : 29 - k, sd = k < 15 ? 'right' : 'left';
+      const xm = (XS[i] + XS[i + 1]) / 2;
+      if (hi >= 13) return [null, 'under'];
+      if (hi <= 4) {
+        if (xm > XD1) return ['bonnet', 'body'];
+        if (xm > XR) return ['windscreen', hi <= 2 ? 'glass' : 'body'];
+        if (xm > XRR || cfg.capGlass) return ['roof', 'body'];
+        if (xm < XT) return [cfg.bed ? 'bed' : 'tailgate', 'body'];
+        return ['rear-windscreen', hi <= 2 ? 'glass' : 'body'];
+      }
+      if (hi <= 7) {
+        if (xm > XD1) return ['wing-' + sd, 'body'];
+        if (xm < XT || (!cfg.qGlass && xm < XD3)) return ['quarter-' + sd, 'body'];
+        const id = xm > XD2 ? 'front-window-' : xm > XD3 ? 'rear-window-' : 'quarter-window-';
+        const pillar = Math.abs(xm - XD2) < 0.06 || Math.abs(xm - XD3) < 0.06;
+        const frame = hi === 5 || pillar || xm < XRR || xm > XD1 - 0.15;
+        return [id + sd, frame ? 'body' : 'glass'];
+      }
+      if (hi >= 10 && xm > XB) return ['front-bumper', 'body'];
+      if (hi >= 10 && xm < XRB) return ['rear-bumper', 'body'];
+      if (xm > XD1) return ['wing-' + sd, 'body'];
+      if (xm > XD2) return ['front-door-' + sd, 'body'];
+      if (xm > XD3) return ['rear-door-' + sd, 'body'];
+      return ['quarter-' + sd, 'body'];
+    };
+    const Q = [];
+    for (let i = 0; i < NS - 1; i++) { Q.push([]); for (let k = 0; k < NK; k++) Q[i].push(classify(i, k)); }
+    const key = (q) => (q[0] || '') + '|' + q[1];
+    const edge = (qa, qb, p1, p2, n1, n2) => {
+      if (key(qa) === key(qb)) return;
+      if (!qa[0] && !qb[0]) return;
+      edges.push({ pa: qa[0], pb: qb[0], p1: p1, p2: p2, n1: n1, n2: n2 });
+    };
+    for (let i = 0; i < NS - 1; i++) {
+      for (let k = 0; k < NK; k++) {
+        const k1 = (k + 1) % NK, q = Q[i][k];
+        quad(G[i][k], G[i + 1][k], G[i + 1][k1], G[i][k1], N[i][k], N[i + 1][k], N[i + 1][k1], N[i][k1], q[0], KIND[q[1]]);
+        edge(q, Q[i][k1], G[i][k1], G[i + 1][k1], N[i][k1], N[i + 1][k1]);
+        if (i < NS - 2) edge(q, Q[i + 1][k], G[i + 1][k], G[i + 1][k1], N[i + 1][k], N[i + 1][k1]);
+      }
+    }
+    const cap = (i, nx, upper, lower, glassCap) => {
+      const n = [nx, 0, 0];
+      const capQ = (j) => (glassCap && (j === 6 || j === 7) ? ['rear-windscreen', 'glass'] : [j <= 9 ? upper : lower, 'body']);
+      for (let j = 0; j < 15; j++) quad(G[i][j], G[i][j + 1], G[i][(NK - (j + 1)) % NK], G[i][(NK - j) % NK], n, n, n, n, capQ(j)[0], KIND[capQ(j)[1]]);
+      edges.push({ pa: upper, pb: lower, p1: G[i][10], p2: G[i][NK - 10], n1: n, n2: n });
+      if (glassCap) [6, 8].forEach((j) => { edges.push({ pa: 'rear-windscreen', pb: upper, p1: G[i][j], p2: G[i][NK - j], n1: n, n2: n }); });
+      const qi = i === 0 ? 0 : NS - 2;
+      for (let k = 0; k < NK; k++) { const hi = k < 15 ? k : 29 - k, k1 = (k + 1) % NK; edge(capQ(hi), Q[qi][k], G[i][k], G[i][k1], N[i][k], N[i][k1]); }
+    };
+    cap(0, 1, 'grille', 'front-bumper');
+    cap(NS - 1, -1, 'tailgate', 'rear-bumper', cfg.capGlass);
+
+    const wheel = (id, x, s) => {
+      const SEG = 24, R = cfg.wr, R2 = R * 0.7, yc = R, zo = s * 0.9, zi = s * 0.6, zr = s * 0.87;
+      const nz = [0, 0, s];
+      for (let g = 0; g < SEG; g++) {
+        const a0 = (g / SEG) * Math.PI * 2, a1 = ((g + 1) / SEG) * Math.PI * 2;
+        const c0 = Math.cos(a0), s0 = Math.sin(a0), c1 = Math.cos(a1), s1 = Math.sin(a1);
+        const pt = (r, c, sn, z) => [x + r * c, yc + r * sn, z];
+        const n0 = [c0, s0, 0], n1 = [c1, s1, 0];
+        quad(pt(R, c0, s0, zo), pt(R, c1, s1, zo), pt(R, c1, s1, zi), pt(R, c0, s0, zi), n0, n1, n1, n0, id, KIND.tyre);
+        quad(pt(R, c0, s0, zo), pt(R, c1, s1, zo), pt(R2, c1, s1, zo), pt(R2, c0, s0, zo), nz, nz, nz, nz, id, KIND.tyre);
+        quad(pt(R2, c0, s0, zo), pt(R2, c1, s1, zo), pt(R2, c1, s1, zr), pt(R2, c0, s0, zr), [-c0, -s0, 0], [-c1, -s1, 0], [-c1, -s1, 0], [-c0, -s0, 0], id, KIND.hub2);
+        tri([x, yc, zr], pt(R2, c0, s0, zr), pt(R2, c1, s1, zr), nz, nz, nz, id, (g >> 1) % 2 ? KIND.hub2 : KIND.hub);
+      }
+    };
+    const wf = cfg.wxf * cfg.lx, wb = cfg.wxr * cfg.lx;
+    wheel('wheel-fr', wf, 1);
+    wheel('wheel-rr', wb, 1);
+    wheel('wheel-fl', wf, -1);
+    wheel('wheel-rl', wb, -1);
+
+    const np = m.parts.length, cent = new Float32Array(np * 3), cnt = new Float32Array(np);
+    for (let v = 0; v < vPart.length; v++) {
+      const pi = vPart[v];
+      if (pi < 0) continue;
+      cent[pi * 3] += geo[v * 7]; cent[pi * 3 + 1] += geo[v * 7 + 1]; cent[pi * 3 + 2] += geo[v * 7 + 2]; cnt[pi]++;
+    }
+    for (let p = 0; p < np; p++) if (cnt[p]) { cent[p * 3] /= cnt[p]; cent[p * 3 + 1] /= cnt[p]; cent[p * 3 + 2] /= cnt[p]; }
+
+    return { geo: new Float32Array(geo), vPart: vPart, vKind: vKind, edges: edges, count: vPart.length, cent: cent, wh: [wf, wb, cfg.wr, (cfg.wr + 0.1) * (cfg.wr + 0.1)] };
+  }
+
+  ribbons(list, width, lift, color) {
+    const geo = [], col = [];
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    for (let i = 0; i < list.length; i++) {
+      const e = list[i];
+      let t = [e.p2[0] - e.p1[0], e.p2[1] - e.p1[1], e.p2[2] - e.p1[2]];
+      const l = Math.hypot(t[0], t[1], t[2]);
+      if (l < 1e-5) continue;
+      t = [t[0] / l, t[1] / l, t[2] / l];
+      const corner = (p, n, sign) => { const s = cross(n, t); return [p[0] + n[0] * lift + s[0] * width * 0.5 * sign, p[1] + n[1] * lift + s[1] * width * 0.5 * sign, p[2] + n[2] * lift + s[2] * width * 0.5 * sign]; };
+      const a = corner(e.p1, e.n1, -1), b = corner(e.p1, e.n1, 1), c = corner(e.p2, e.n2, 1), d = corner(e.p2, e.n2, -1);
+      [a, b, c, a, c, d].forEach((p) => { geo.push(p[0], p[1], p[2], 0, 1, 0, 1); col.push(color[0], color[1], color[2]); });
+    }
+    return { geo: new Float32Array(geo), col: new Float32Array(col), count: geo.length / 7 };
+  }
+
+  hexToRgb(hex) {
+    const mm = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
+    if (!mm) return [0.42, 0.43, 0.45];
+    const v = parseInt(mm[1], 16);
+    return [((v >> 16) & 255) / 255, ((v >> 8) & 255) / 255, (v & 255) / 255];
+  }
+
+  canvasEl() {
+    if (this._cv && this._cv.isConnected) return this._cv;
+    const el = typeof document !== 'undefined' ? document.querySelector('canvas[data-car-view]') : null;
+    if (el) this._cv = el;
+    return this._cv || null;
+  }
+
+  setCanvas = (el) => { if (el) { this._cv = el; this.requestDraw(); } };
+
+  requestDraw() {
+    if (this._raf) return;
+    this._raf = requestAnimationFrame(() => { this._raf = 0; this.draw(); });
+  }
+
+  ensureGL(cv) {
+    if (this._gl && this._glCv === cv && this._geomType === this.state.vehicle) return true;
+    if (this.state.noGL) return false;
+    let gl = (this._gl && this._glCv === cv) ? this._gl : null;
+    if (!gl) {
+      try { gl = cv.getContext('webgl', { antialias: true, alpha: true }) || cv.getContext('experimental-webgl'); } catch (err) { gl = null; }
+    }
+    if (!gl) { this.setState({ noGL: true }); return false; }
+    const VS = [
+      'attribute vec3 a_pos; attribute vec3 a_nrm; attribute vec3 a_col; attribute float a_flag;',
+      'uniform mat3 u_rot; uniform vec3 u_sc; uniform float u_d;',
+      'varying vec3 v_n; varying vec3 v_c; varying vec3 v_w; varying vec3 v_p; varying float v_f;',
+      'void main(){',
+      '  vec3 p = u_rot * (a_pos - vec3(0.0, 0.85, 0.0));',
+      '  float w = u_d - p.z;',
+      '  float zl = (w - 2.0) / (u_d + 4.0) * 2.0 - 1.0;',
+      '  gl_Position = vec4(p.x * u_sc.x, p.y * u_sc.y + u_sc.z * w, zl * w, w);',
+      '  v_n = u_rot * a_nrm; v_c = a_col; v_w = a_pos; v_p = p; v_f = a_flag;',
+      '}'
+    ].join('\n');
+    const FS = [
+      '#ifdef GL_FRAGMENT_PRECISION_HIGH',
+      'precision highp float;',
+      '#else',
+      'precision mediump float;',
+      '#endif',
+      'uniform float u_mode; uniform float u_df; uniform vec4 u_wh;',
+      'varying vec3 v_n; varying vec3 v_c; varying vec3 v_w; varying vec3 v_p; varying float v_f;',
+      'void main(){',
+      '  if (u_mode > 1.5) {',
+      '    float r = length(vec2(v_w.x / 2.75, v_w.z / 1.4));',
+      '    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.32 * (1.0 - smoothstep(0.25, 1.0, r)));',
+      '    return;',
+      '  }',
+      '  if (v_f > 0.5 && v_f < 1.5 && abs(v_w.z) > 0.45) {',
+      '    float dxf = v_w.x - u_wh.x;',
+      '    float dxr = v_w.x - u_wh.y;',
+      '    float dy = v_w.y - u_wh.z;',
+      '    if (min(dxf * dxf, dxr * dxr) + dy * dy < u_wh.w) discard;',
+      '  }',
+      '  if (u_mode > 0.5) { gl_FragColor = vec4(v_c, 1.0); return; }',
+      '  vec3 n = normalize(v_n);',
+      '  vec3 v = normalize(vec3(0.0, 0.0, u_df) - v_p);',
+      '  float facing = dot(n, v);',
+      '  if (facing < -0.2) { gl_FragColor = vec4(v_c * 0.1, 1.0); return; }',
+      '  vec3 l = normalize(vec3(-0.3, 0.9, 0.4));',
+      '  float diff = max(dot(n, l), 0.0);',
+      '  float hemi = 0.5 + 0.5 * n.y;',
+      '  float isGlass = step(1.5, v_f);',
+      '  vec3 c = v_c * (0.34 + 0.26 * hemi + 0.5 * diff);',
+      '  float sp = pow(max(dot(n, normalize(l + v)), 0.0), mix(28.0, 90.0, isGlass));',
+      '  c += vec3(1.0) * sp * mix(0.2, 0.55, isGlass);',
+      '  float rim = pow(1.0 - max(facing, 0.0), 3.0);',
+      '  c += vec3(1.0) * rim * mix(0.12, 0.22, isGlass);',
+      '  gl_FragColor = vec4(c, 1.0);',
+      '}'
+    ].join('\n');
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { this.setState({ noGL: true }); return false; }
+    gl.useProgram(prog);
+    const mk = (data, dyn) => { const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, data, dyn ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW); return b; };
+    this._model = null;
+    this._geom = this.buildGeometry();
+    this._geomType = this.state.vehicle;
+    this._scr = null;
+    const g = this._geom;
+    this._colData = new Float32Array(g.count * 3);
+    const lines = this.ribbons(g.edges, 0.012, 0.004, [0.12, 0.12, 0.13]);
+    const sg = [];
+    [[-3.1, -1.75], [3.1, -1.75], [3.1, 1.75], [-3.1, -1.75], [3.1, 1.75], [-3.1, 1.75]].forEach((p) => { sg.push(p[0], 0.002, p[1], 0, 1, 0, 0); });
+    this._loc = {
+      pos: gl.getAttribLocation(prog, 'a_pos'), nrm: gl.getAttribLocation(prog, 'a_nrm'), col: gl.getAttribLocation(prog, 'a_col'), flag: gl.getAttribLocation(prog, 'a_flag'),
+      rot: gl.getUniformLocation(prog, 'u_rot'), sc: gl.getUniformLocation(prog, 'u_sc'), d: gl.getUniformLocation(prog, 'u_d'), df: gl.getUniformLocation(prog, 'u_df'), mode: gl.getUniformLocation(prog, 'u_mode'), wh: gl.getUniformLocation(prog, 'u_wh')
+    };
+    this._sets = {
+      mesh: { geo: mk(g.geo), col: mk(this._colData, true), count: g.count },
+      lines: { geo: mk(lines.geo), col: mk(lines.col), count: lines.count },
+      shadow: { geo: mk(new Float32Array(sg)), col: mk(new Float32Array(18)), count: 6 },
+      sel: { geo: gl.createBuffer(), col: gl.createBuffer(), count: 0 }
+    };
+    this._selFor = undefined;
+    this._colDirty = true;
+    this._gl = gl;
+    this._glCv = cv;
+    if (!cv._carLostBound) {
+      cv._carLostBound = true;
+      cv.addEventListener('webglcontextlost', (ev) => { ev.preventDefault(); this._gl = null; });
+      cv.addEventListener('webglcontextrestored', () => { this._gl = null; this.requestDraw(); });
+    }
+    return true;
+  }
+
+  updateColors(gl) {
+    const g = this._geom, m = this.getModel(), out = this._colData;
+    const paint = this.hexToRgb(this.props.paint || '#6B6E74');
+    const base = [paint, [0.06, 0.065, 0.075], [0.1, 0.1, 0.11], [0.08, 0.08, 0.09], [0.72, 0.73, 0.75], [0.2, 0.2, 0.22]];
+    const tints = { ok: [0.3, 0.74, 0.47], advisory: [0.96, 0.62, 0.22], damage: [0.9, 0.3, 0.28] };
+    const st = this.state.status;
+    const selI = this.state.selected ? m.index[this.state.selected] : -2, hovI = this.state.hover ? m.index[this.state.hover] : -2;
+    const tintOf = m.parts.map((p) => tints[st[p.id]] || null);
+    for (let i = 0; i < g.count; i++) {
+      const k = g.vKind[i], pi = g.vPart[i];
+      let c = base[k];
+      const t = pi >= 0 ? tintOf[pi] : null;
+      if (t) {
+        const a = k === 0 || k === 4 ? 1 : k === 1 ? 0.5 : k === 3 ? 0.35 : 0.3;
+        c = [c[0] + (t[0] - c[0]) * a, c[1] + (t[1] - c[1]) * a, c[2] + (t[2] - c[2]) * a];
+      }
+      if (pi === selI && !t && (k === 0 || k === 4)) c = [c[0] + (0.24 - c[0]) * 0.45, c[1] + (0.42 - c[1]) * 0.45, c[2] + (0.88 - c[2]) * 0.45];
+      const lift = pi === selI ? 0.06 : pi === hovI ? 0.16 : 0;
+      out[i * 3] = c[0] + (1 - c[0]) * lift;
+      out[i * 3 + 1] = c[1] + (1 - c[1]) * lift;
+      out[i * 3 + 2] = c[2] + (1 - c[2]) * lift;
+    }
+    gl.bindBuffer(gl.ARRAY_BUFFER, this._sets.mesh.col);
+    gl.bufferData(gl.ARRAY_BUFFER, out, gl.DYNAMIC_DRAW);
+    this._colDirty = false;
+  }
+
+  view(cv) {
+    const w = cv.clientWidth, h = cv.clientHeight;
+    const s = Math.min(w / 6.2, h / 4.2);
+    return { w: w, h: h, s: s, ox: w / 2, oy: h / 2 + s * 0.12, D: 8 };
+  }
+
+  project(px, py, pz, vw) {
+    const cy = Math.cos(this._yaw), sy = Math.sin(this._yaw), cp = Math.cos(this._pitch), sp = Math.sin(this._pitch);
+    py -= 0.85;
+    const x1 = px * cy + pz * sy, z1 = -px * sy + pz * cy;
+    const Y = py * cp - z1 * sp, Z = py * sp + z1 * cp, k = vw.D / (vw.D - Z);
+    return [vw.ox + x1 * vw.s * k, vw.oy - Y * vw.s * k, Z];
+  }
+
+  updateAnchor(vw) {
+    const sel = this.state.selected, g = this._geom;
+    let a = null;
+    if (sel && !this._drag && !this._anim && g && g.cent && this._geomType === this.state.vehicle) {
+      const i = this.getModel().index[sel];
+      if (i != null) {
+        const p = this.project(g.cent[i * 3], g.cent[i * 3 + 1], g.cent[i * 3 + 2], vw);
+        const side = p[0] > vw.w / 2 ? 'right' : 'left';
+        a = { side: side, top: Math.round(p[1] - 22), w: Math.round(side === 'left' ? p[0] + 4 : vw.w - p[0] + 4) };
+      }
+    }
+    const o = this.state.anchor;
+    if (!a && !o) return;
+    if (a && o && a.side === o.side && Math.abs(a.top - o.top) < 2 && Math.abs(a.w - o.w) < 2) return;
+    this.setState({ anchor: a });
+  }
+
+  draw() {
+    const cv = this.canvasEl();
+    if (!cv) return;
+    const vw = this.view(cv);
+    if (!vw.w || !vw.h) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const pw = Math.round(vw.w * dpr), ph = Math.round(vw.h * dpr);
+    if (cv.width !== pw) cv.width = pw;
+    if (cv.height !== ph) cv.height = ph;
+    if (!this.ensureGL(cv)) return;
+    const gl = this._gl, loc = this._loc, sets = this._sets;
+    if (this._colDirty) this.updateColors(gl);
+    const sel = this.state.selected;
+    if (this._selFor !== sel) {
+      this._selFor = sel;
+      if (sel) {
+        const r = this.ribbons(this._geom.edges.filter((e) => e.pa !== e.pb && (e.pa === sel || e.pb === sel)), 0.04, 0.01, [0.24, 0.42, 0.88]);
+        gl.bindBuffer(gl.ARRAY_BUFFER, sets.sel.geo); gl.bufferData(gl.ARRAY_BUFFER, r.geo, gl.DYNAMIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, sets.sel.col); gl.bufferData(gl.ARRAY_BUFFER, r.col, gl.DYNAMIC_DRAW);
+        sets.sel.count = r.count;
+      } else sets.sel.count = 0;
+    }
+    gl.viewport(0, 0, pw, ph);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.disable(gl.CULL_FACE);
+    const cy = Math.cos(this._yaw), sy = Math.sin(this._yaw), cp = Math.cos(this._pitch), sp = Math.sin(this._pitch);
+    gl.uniformMatrix3fv(loc.rot, false, new Float32Array([cy, sy * sp, -sy * cp, 0, cp, sp, sy, -cy * sp, cy * cp]));
+    gl.uniform3f(loc.sc, (2 * vw.s * vw.D) / vw.w, (2 * vw.s * vw.D) / vw.h, (-0.24 * vw.s) / vw.h);
+    gl.uniform1f(loc.d, vw.D);
+    gl.uniform1f(loc.df, vw.D);
+    gl.uniform4f(loc.wh, this._geom.wh[0], this._geom.wh[1], this._geom.wh[2], this._geom.wh[3]);
+    const run = (set, mode) => {
+      if (!set.count) return;
+      gl.uniform1f(loc.mode, mode);
+      gl.bindBuffer(gl.ARRAY_BUFFER, set.geo);
+      gl.enableVertexAttribArray(loc.pos); gl.vertexAttribPointer(loc.pos, 3, gl.FLOAT, false, 28, 0);
+      gl.enableVertexAttribArray(loc.nrm); gl.vertexAttribPointer(loc.nrm, 3, gl.FLOAT, false, 28, 12);
+      gl.enableVertexAttribArray(loc.flag); gl.vertexAttribPointer(loc.flag, 1, gl.FLOAT, false, 28, 24);
+      gl.bindBuffer(gl.ARRAY_BUFFER, set.col);
+      gl.enableVertexAttribArray(loc.col); gl.vertexAttribPointer(loc.col, 3, gl.FLOAT, false, 0, 0);
+      gl.drawArrays(gl.TRIANGLES, 0, set.count);
+    };
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.depthMask(false);
+    run(sets.shadow, 2);
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
+    run(sets.mesh, 0);
+    run(sets.lines, 1);
+    run(sets.sel, 1);
+    this.updateAnchor(vw);
+  }
+
+  hit(e) {
+    const cv = this.canvasEl(), g = this._geom;
+    if (!cv || !g || this._geomType !== this.state.vehicle) return null;
+    const r = cv.getBoundingClientRect();
+    if (!r.width || !r.height) return null;
+    const vw = this.view(cv);
+    const x = (e.clientX - r.left) * (vw.w / r.width), y = (e.clientY - r.top) * (vw.h / r.height);
+    const P = g.geo, n = g.count;
+    const S = this._scr || (this._scr = new Float32Array(n * 3));
+    for (let i = 0; i < n; i++) {
+      const q = this.project(P[i * 7], P[i * 7 + 1], P[i * 7 + 2], vw);
+      S[i * 3] = q[0]; S[i * 3 + 1] = q[1]; S[i * 3 + 2] = q[2];
+    }
+    let best = -1, bestZ = -1e9;
+    for (let t = 0; t < n; t += 3) {
+      const x0 = S[t * 3], y0 = S[t * 3 + 1], x1 = S[t * 3 + 3], y1 = S[t * 3 + 4], x2 = S[t * 3 + 6], y2 = S[t * 3 + 7];
+      if ((x < x0 && x < x1 && x < x2) || (x > x0 && x > x1 && x > x2) || (y < y0 && y < y1 && y < y2) || (y > y0 && y > y1 && y > y2)) continue;
+      const den = (y1 - y2) * (x0 - x2) + (x2 - x1) * (y0 - y2);
+      if (Math.abs(den) < 1e-9) continue;
+      const a = ((y1 - y2) * (x - x2) + (x2 - x1) * (y - y2)) / den, b = ((y2 - y0) * (x - x2) + (x0 - x2) * (y - y2)) / den, c = 1 - a - b;
+      if (a < 0 || b < 0 || c < 0) continue;
+      const z = a * S[t * 3 + 2] + b * S[t * 3 + 5] + c * S[t * 3 + 8];
+      if (z <= bestZ) continue;
+      if (P[t * 7 + 6] === 1) {
+        const wz = a * P[t * 7 + 2] + b * P[t * 7 + 9] + c * P[t * 7 + 16];
+        if (Math.abs(wz) > 0.45) {
+          const wx = a * P[t * 7] + b * P[t * 7 + 7] + c * P[t * 7 + 14], wy = a * P[t * 7 + 1] + b * P[t * 7 + 8] + c * P[t * 7 + 15];
+          const dxf = wx - g.wh[0], dxr = wx - g.wh[1], dy = wy - g.wh[2];
+          if (Math.min(dxf * dxf, dxr * dxr) + dy * dy < g.wh[3]) continue;
+        }
+      }
+      bestZ = z; best = t;
+    }
+    if (best < 0) return null;
+    const pi = g.vPart[best];
+    return pi >= 0 ? this.getModel().parts[pi].id : null;
+  }
+
+  stopAnim() { if (this._anim) { cancelAnimationFrame(this._anim); this._anim = 0; } }
+
+  animateTo(yaw, pitch, dur) {
+    this.stopAnim();
+    const tau = Math.PI * 2;
+    let d = (yaw - this._yaw) % tau;
+    d = ((d + tau + Math.PI) % tau) - Math.PI;
+    const y0 = this._yaw, p0 = this._pitch, dp = pitch - p0, ms = dur || 560;
+    const still = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (still) { this._yaw = y0 + d; this._pitch = pitch; this.draw(); return; }
+    const t0 = performance.now();
+    const step = (now) => {
+      const t = Math.min(1, (now - t0) / ms), k = 1 - Math.pow(1 - t, 3);
+      this._yaw = y0 + d * k; this._pitch = p0 + dp * k;
+      this._anim = t < 1 ? requestAnimationFrame(step) : 0;
+      this.draw();
+    };
+    this._anim = requestAnimationFrame(step);
+  }
+
+  onDown = (e) => {
+    this.stopAnim();
+    this._drag = { x: e.clientX, y: e.clientY, moved: false };
+    const cv = e.currentTarget;
+    try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+    if (cv && cv.style) cv.style.cursor = 'grabbing';
+  };
+
+  onMove = (e) => {
+    const d = this._drag;
+    if (d) {
+      if (e.pointerType === 'mouse' && e.buttons === 0) { this._drag = null; this.requestDraw(); return; }
+      const dx = e.clientX - d.x, dy = e.clientY - d.y;
+      if (!d.moved && Math.hypot(dx, dy) < 5) return;
+      d.moved = true; d.x = e.clientX; d.y = e.clientY;
+      this._yaw += dx * 0.01;
+      this._pitch = Math.max(-0.05, Math.min(1.45, this._pitch + dy * 0.008));
+      this.requestDraw();
+      return;
+    }
+    if (e.pointerType === 'mouse') {
+      if (this._hovWait) return;
+      this._hovWait = true;
+      requestAnimationFrame(() => { this._hovWait = false; });
+      const id = this.hit(e);
+      const cv = e.currentTarget;
+      if (cv && cv.style) cv.style.cursor = id ? 'pointer' : 'grab';
+      if (id !== this.state.hover) this.setState({ hover: id });
+    }
+  };
+
+  onUp = (e) => {
+    const d = this._drag;
+    this._drag = null;
+    const cv = e.currentTarget;
+    if (cv && cv.style) cv.style.cursor = 'grab';
+    if (!d) return;
+    if (d.moved) { this.requestDraw(); return; }
+    const id = this.hit(e);
+    if (id) {
+      const z = this.getModel().byId[id].zone;
+      this.setState({ selected: id, zone: this.state.zone === 'all' ? 'all' : z });
+    }
+  };
+
+  onCancel = () => { this._drag = null; this.requestDraw(); };
+
+  onLeave = () => { if (!this._drag && this.state.hover) this.setState({ hover: null }); };
+
+  pick(id) {
+    const p = this.getModel().byId[id];
+    this.setState({ selected: id });
+    if (p) this.animateTo(p.view[0], p.view[1]);
+  }
+
+  mark(value) {
+    const id = this.state.selected;
+    if (!id) return;
+    const next = Object.assign({}, this.state.status);
+    if (next[id] === value) delete next[id]; else next[id] = value;
+    this.setState({ status: next });
+  }
+
+  componentDidMount() {
+    this.draw();
+    this._t1 = setTimeout(() => { if (!this._drag) this.animateTo(-0.75, 0.62, 1600); }, 200);
+    this._t2 = setTimeout(() => this.draw(), 2200);
+    const cv = this.canvasEl();
+    if (cv && typeof ResizeObserver === 'function') { this._ro = new ResizeObserver(() => this.requestDraw()); this._ro.observe(cv); }
+  }
+
+  componentDidUpdate() { this._colDirty = true; this.draw(); }
+
+  componentWillUnmount() {
+    this.stopAnim();
+    if (this._raf) cancelAnimationFrame(this._raf);
+    clearTimeout(this._t1); clearTimeout(this._t2);
+    if (this._ro) this._ro.disconnect();
+  }
+
+  renderVals() {
+    const m = this.getModel();
+    const st = this.state.status, sel = this.state.selected, notes = this.state.notes, zone = this.state.zone;
+    const meta = {
+      ok: { label: 'Pass', color: '#1F7A45' },
+      advisory: { label: 'Advisory', color: '#9A5200' },
+      damage: { label: 'Damage', color: '#B3261E' }
+    };
+    const count = { ok: 0, advisory: 0, damage: 0 };
+    m.parts.forEach((p) => { if (st[p.id]) count[st[p.id]]++; });
+    const done = count.ok + count.advisory + count.damage, total = m.parts.length;
+    const all = this.vehicles();
+
+    const zones = this.zoneDefs().map((z) => {
+      const ps = z.id === 'all' ? m.parts : m.parts.filter((p) => p.zone === z.id);
+      const on = z.id === zone;
+      return {
+        name: z.name, icon: z.icon, on: on,
+        count: ps.filter((p) => st[p.id]).length + '/' + ps.length,
+        bg: on ? '#E2E2E4' : 'transparent', weight: on ? 600 : 400,
+        pick: () => this.setState({ zone: z.id })
+      };
+    });
+    const zDef = this.zoneDefs().filter((z) => z.id === zone)[0] || this.zoneDefs()[0];
+    const shown = zone === 'all' ? m.parts : m.parts.filter((p) => p.zone === zone);
+
+    const items = shown.map((p) => {
+      const s = st[p.id], on = p.id === sel;
+      return {
+        name: p.name,
+        selected: on,
+        statusLabel: s ? meta[s].label : '',
+        statusColor: s ? meta[s].color : '#5E5E62',
+        dot: s ? meta[s].color : 'transparent',
+        dotBorder: s ? meta[s].color : '#8E8E93',
+        bg: on ? '#FFFFFF' : 'transparent',
+        shadow: on ? '0 1px 2px rgba(0,0,0,0.12)' : 'none',
+        pick: () => this.pick(p.id)
+      };
+    });
+
+    const selPart = sel ? m.byId[sel] : null;
+    const conditions = ['ok', 'advisory', 'damage'].map((k) => {
+      const on = !!sel && st[sel] === k;
+      return {
+        label: meta[k].label, on: on, dot: meta[k].color,
+        bg: on ? '#FFFFFF' : 'transparent', shadow: on ? '0 1px 2px rgba(0,0,0,0.12)' : 'none',
+        fg: on ? meta[k].color : '#3A3A3C',
+        set: () => this.mark(k)
+      };
+    });
+
+    const hovPart = this.state.hover ? m.byId[this.state.hover] : null;
+    const hint = this.state.noGL ? '3D view is not available here. Use the list.' : hovPart ? hovPart.name : 'Drag to rotate · Tap a part';
+
+    const viewDefs = [['3/4', -0.75, 0.62], ['Front', -Math.PI / 2, 0.22], ['Right', 0, 0.18], ['Rear', Math.PI / 2, 0.22], ['Left', Math.PI, 0.18], ['Top', -Math.PI / 2, 1.45]];
+    const an = selPart ? this.state.anchor : null;
+    const ss = selPart ? st[sel] : null;
+
+    return {
+      vehicles: Object.keys(all).map((k) => {
+        const on = k === this.state.vehicle;
+        return { label: all[k].label, on: on, bg: on ? '#FFFFFF' : 'transparent', shadow: on ? '0 1px 2px rgba(0,0,0,0.12)' : 'none', fg: on ? '#1C1C1E' : '#3A3A3C',
+          pick: () => { if (!on) this.setState({ vehicle: k, selected: null, hover: null, status: {}, notes: {}, anchor: null }); } };
+      }),
+      zones: zones,
+      zoneName: zDef.id === 'all' ? 'All parts' : zDef.name + ' parts',
+      items: items,
+      setCanvas: this.setCanvas,
+      onDown: this.onDown, onMove: this.onMove, onUp: this.onUp, onCancel: this.onCancel, onLeave: this.onLeave,
+      views: viewDefs.map((v) => ({ label: v[0], go: () => this.animateTo(v[1], v[2]) })),
+      hint: hint,
+      tagLeft: !!an && an.side === 'left',
+      tagRight: !!an && an.side === 'right',
+      tagTop: an ? an.top + 'px' : '0px',
+      tagW: an ? an.w + 'px' : '0px',
+      selStatus: ss ? meta[ss].label : 'Not checked',
+      selStatusColor: ss ? meta[ss].color : '#5E5E62',
+      doneCount: done,
+      total: total,
+      hasSel: !!selPart,
+      noSel: !selPart,
+      selName: selPart ? selPart.name : '',
+      conditions: conditions,
+      note: sel ? (notes[sel] || '') : '',
+      setNote: (e) => { if (!sel) return; const next = Object.assign({}, notes); next[sel] = e.target.value; this.setState({ notes: next }); },
+      clearSel: () => {
+        if (!sel) return;
+        const ns = Object.assign({}, st), nn = Object.assign({}, notes);
+        delete ns[sel]; delete nn[sel];
+        this.setState({ status: ns, notes: nn });
+      },
+      passRest: () => {
+        const ns = Object.assign({}, st);
+        m.parts.forEach((p) => { if (!ns[p.id]) ns[p.id] = 'ok'; });
+        this.setState({ status: ns });
+      },
+      progressPct: Math.round((done / total) * 100) + '%',
+      summary: count.ok + ' pass · ' + count.advisory + ' advisory · ' + count.damage + ' damage'
+    };
+  }
+}
+</script>
+</body>
+</html>
