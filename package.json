@@ -1,8 +1,17 @@
 {
   "name": "car-parts-selector",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Interactive 3D vehicle inspection demo built with React, three.js and React Three Fiber.",
+  "homepage": "https://car-parts-selector.bubbablaise3.workers.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tonyblaise/car-parts-selector.git"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

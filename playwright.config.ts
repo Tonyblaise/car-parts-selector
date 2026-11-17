@@ -20,7 +20,14 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Software WebGL, so the 3D view also renders on GPU-less CI runners.
+        launchOptions: { args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] },
+      },
+    },
     { name: 'webkit', use: { ...devices['Desktop Safari'] } },
     {
       name: 'firefox',
